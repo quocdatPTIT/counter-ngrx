@@ -15,6 +15,7 @@ import {Post} from "../models/post.model";
 import {Store} from "@ngrx/store";
 import {AppState} from "../../store/app.state";
 import {getPosts} from "../store/post.selector";
+import {deletePost} from "../store/post.actions";
 
 @Component({
   selector: 'app-posts-list',
@@ -35,4 +36,9 @@ export class PostsListComponent implements OnInit {
     this.posts$ = this.store.select(getPosts);
   }
 
+  // Events
+  // -----------------------------------------------------------------------------------------------------
+  onDeletePost(id: string | undefined): void {
+    this.store.dispatch(deletePost({id}));
+  }
 }

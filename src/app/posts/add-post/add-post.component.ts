@@ -1,11 +1,14 @@
 // Angular
+// -----------------------------------------------------------------------------------------------------
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
 
 // Functions
+// -----------------------------------------------------------------------------------------------------
 import {firstCapitalizeString} from "../../shared/prototypes/string-capitalize";
 
 // Ngrx
+// -----------------------------------------------------------------------------------------------------
 import {Store} from "@ngrx/store";
 import {Post} from "../models/post.model";
 import {AppState} from "../../store/app.state";

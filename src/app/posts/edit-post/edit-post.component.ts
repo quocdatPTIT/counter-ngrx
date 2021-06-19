@@ -1,7 +1,7 @@
 // Angular
 // -----------------------------------------------------------------------------------------------------
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 // Ngrx
 // -----------------------------------------------------------------------------------------------------
@@ -18,6 +18,7 @@ import {Post} from "../models/post.model";
 import {Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {updatePost} from "../store/post.actions";
 
 @Component({
   selector: 'app-edit-post',
@@ -33,6 +34,7 @@ export class EditPostComponent implements OnInit, OnDestroy {
 
   private unsubscribe$ = new Subject();
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private cdf: ChangeDetectorRef,
     private store: Store<AppState>) { }
@@ -58,7 +60,19 @@ export class EditPostComponent implements OnInit, OnDestroy {
   // Form
   // -----------------------------------------------------------------------------------------------------
   onUpdatePost(): void {
+    if (!this.postForm.valid) return;
 
+    const title = this.postForm.value.title;
+    const description = this.postForm.value.description;
+
+    const post: Post = {
+      id: this.post.id,
+      title,
+      description,
+    };
+
+    this.store.dispatch(updatePost({post}));
+    this.router.navigate(['posts'])
   }
 
   private createForm(): void {
