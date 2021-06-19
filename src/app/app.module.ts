@@ -20,7 +20,6 @@ import {HeaderComponent} from './shared/components/header/header.component';
 // -----------------------------------------------------------------------------------------------------
 import {StoreModule} from "@ngrx/store";
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
-import {appReducer} from "./store/app.state";
 
 @NgModule({
   declarations: [
@@ -31,7 +30,7 @@ import {appReducer} from "./store/app.state";
   imports: [
     BrowserModule,
     AppRoutingModule,
-    StoreModule.forRoot(appReducer),
+    StoreModule.forRoot({}),
     StoreDevtoolsModule.instrument({
       autoPause: false
     })

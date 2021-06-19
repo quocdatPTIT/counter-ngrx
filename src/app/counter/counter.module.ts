@@ -12,6 +12,12 @@ import {CounterOutputComponent} from "./counter-output/counter-output.component"
 import {CounterButtonsComponent} from "./counter-buttons/counter-buttons.component";
 import {CustomCounterInputComponent} from "./custom-counter-input/custom-counter-input.component";
 
+// Ngrx
+// -----------------------------------------------------------------------------------------------------
+import {StoreModule} from "@ngrx/store";
+import {COUNTER_STATE_NAME} from "./store/counter.selectors";
+import {counterReducer} from "./store/counter.reducer";
+
 const routes: Routes = [
   {
     path: '',
@@ -26,6 +32,11 @@ const routes: Routes = [
     CounterButtonsComponent,
     CustomCounterInputComponent,
   ],
-  imports: [CommonModule, FormsModule, RouterModule.forChild(routes)],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule.forChild(routes),
+    StoreModule.forFeature(COUNTER_STATE_NAME, counterReducer)
+  ],
 })
 export class CounterModule {}

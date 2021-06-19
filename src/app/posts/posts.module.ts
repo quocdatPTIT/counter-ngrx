@@ -11,6 +11,12 @@ import {PostsListComponent} from "./posts-list/posts-list.component";
 import {AddPostComponent} from "./add-post/add-post.component";
 import {EditPostComponent} from "./edit-post/edit-post.component";
 
+// Ngrx
+// -----------------------------------------------------------------------------------------------------
+import {StoreModule} from "@ngrx/store";
+import {POSTS_STATE_NAME} from "./store/post.selector";
+import {postReducer} from "./store/post.reducer";
+
 const routes: Routes = [
   {
     path: '',
@@ -37,7 +43,8 @@ const routes: Routes = [
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterModule.forChild(routes)
-  ]
+    RouterModule.forChild(routes),
+    StoreModule.forFeature(POSTS_STATE_NAME, postReducer),
+  ],
 })
 export class PostsModule {}

@@ -1,8 +1,9 @@
-import {createFeatureSelector, createSelector, DefaultProjectorFn} from "@ngrx/store";
+import {createFeatureSelector, createSelector} from "@ngrx/store";
 import {PostState} from "./post.state";
-import {Post} from "../models/post.model";
 
-const getPostsState = createFeatureSelector<PostState>('posts');
+export const POSTS_STATE_NAME = 'posts';
+
+const getPostsState = createFeatureSelector<PostState>(POSTS_STATE_NAME);
 
 export const getPosts = createSelector(getPostsState, (state) => state.posts);
 
