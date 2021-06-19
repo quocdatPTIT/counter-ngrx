@@ -20,6 +20,10 @@ import {takeUntil} from "rxjs/operators";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {updatePost} from "../store/post.actions";
 
+// Helpers
+// -----------------------------------------------------------------------------------------------------
+import {ValidationFormHelper} from "../../shared/helpers/validation-form.helper";
+
 @Component({
   selector: 'app-edit-post',
   templateUrl: './edit-post.component.html',
@@ -31,13 +35,16 @@ export class EditPostComponent implements OnInit, OnDestroy {
   post: Post;
   // @ts-ignore
   postForm: FormGroup;
+  isSubmit: boolean = false;
 
   private unsubscribe$ = new Subject();
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private cdf: ChangeDetectorRef,
-    private store: Store<AppState>) { }
+    private validationFormHelper: ValidationFormHelper,
+    private store: Store<AppState>
+  ) { }
 
   // Lifecycle Hooks
   // -----------------------------------------------------------------------------------------------------
@@ -59,6 +66,14 @@ export class EditPostComponent implements OnInit, OnDestroy {
 
   // Form
   // -----------------------------------------------------------------------------------------------------
+  showErrorLabel(controlName: string): string {
+    return this.validationFormHelper.showErrorLabel(controlName, this.postForm, this.isSubmit);
+  }
+
+  showError(controlName: string): boolean | undefined {
+    return this.validationFormHelper.showError(controlName, this.postForm, this.isSubmit);
+  }
+
   onUpdatePost(): void {
     if (!this.postForm.valid) return;
 

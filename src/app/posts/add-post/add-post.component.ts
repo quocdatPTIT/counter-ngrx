@@ -1,11 +1,7 @@
 // Angular
 // -----------------------------------------------------------------------------------------------------
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
-
-// Functions
-// -----------------------------------------------------------------------------------------------------
-import {firstCapitalizeString} from "../../shared/prototypes/string-capitalize";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 
 // Ngrx
 // -----------------------------------------------------------------------------------------------------
@@ -13,6 +9,10 @@ import {Store} from "@ngrx/store";
 import {Post} from "../models/post.model";
 import {AppState} from "../../store/app.state";
 import {addPost} from "../store/post.actions";
+
+// Helpers
+// -----------------------------------------------------------------------------------------------------
+import {ValidationFormHelper} from "../../shared/helpers/validation-form.helper";
 
 @Component({
   selector: 'app-add-post',
@@ -25,8 +25,10 @@ export class AddPostComponent implements OnInit {
   postForm: FormGroup;
   isSubmit = false;
 
-  constructor(private store: Store<AppState>) {
-  }
+  constructor(
+    private store: Store<AppState>,
+    private validationFormHelper: ValidationFormHelper
+  ) {}
 
   // Lifecycle Hooks
   // -----------------------------------------------------------------------------------------------------
@@ -40,28 +42,11 @@ export class AddPostComponent implements OnInit {
   // Form
   // -----------------------------------------------------------------------------------------------------
   showErrorLabel(controlName: string): string {
-    const formControl: AbstractControl | null = this.postForm.get(controlName);
-    if (formControl?.touched && !formControl.valid) {
-      if (formControl?.errors?.required) {
-        return `${firstCapitalizeString(controlName)} is required`;
-      }
-
-      if (formControl?.errors?.minlength) {
-        const minLength = controlName === 'title' ? 6 : 10;
-        return `${firstCapitalizeString(controlName)} should be of minimum ${minLength} characters length`;
-      }
-    }
-
-    if (this.isSubmit && formControl?.untouched && !formControl.valid)
-      return `${firstCapitalizeString(controlName)} is required`;
-
-    return '';
+    return this.validationFormHelper.showErrorLabel(controlName, this.postForm, this.isSubmit);
   }
 
   showError(controlName: string): boolean | undefined {
-    const formControl: AbstractControl | null = this.postForm.get(controlName);
-    return (this.isSubmit && formControl?.untouched && !formControl.valid)
-      || (formControl?.touched && !formControl.valid);
+    return this.validationFormHelper.showError(controlName, this.postForm, this.isSubmit);
   }
 
   onAddPost(): void {

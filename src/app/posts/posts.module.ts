@@ -17,6 +17,10 @@ import {StoreModule} from "@ngrx/store";
 import {POSTS_STATE_NAME} from "./store/post.selector";
 import {postReducer} from "./store/post.reducer";
 
+// Helpers
+// -----------------------------------------------------------------------------------------------------
+import {ValidationFormHelper} from "../shared/helpers/validation-form.helper";
+
 const routes: Routes = [
   {
     path: '',
@@ -46,5 +50,8 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     StoreModule.forFeature(POSTS_STATE_NAME, postReducer),
   ],
+  providers: [
+    ValidationFormHelper
+  ]
 })
 export class PostsModule {}

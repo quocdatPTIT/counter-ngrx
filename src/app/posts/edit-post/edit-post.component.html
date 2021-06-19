@@ -5,10 +5,16 @@
       <div class="mb-3">
         <label for="title" class="form-label">Title</label>
         <input type="text" class="form-control" id="title" aria-describedby="emailHelp" formControlName="title">
+        <div *ngIf="showError('title')" class="mt-2" style="color: red; font-size: 14px;">
+          {{showErrorLabel('title')}}
+        </div>
       </div>
       <div class="mb-3">
         <label for="description" class="form-label">Description</label>
         <input type="text" class="form-control" id="description" formControlName="description">
+        <div *ngIf="showError('description')" class="mt-2" style="color: red; font-size: 14px;">
+          {{showErrorLabel('description')}}
+        </div>
       </div>
       <div class="my-3">
         <button class="btn btn-primary" [disabled]="!postForm.valid">Update Post</button>
