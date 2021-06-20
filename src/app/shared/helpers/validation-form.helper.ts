@@ -19,9 +19,11 @@ export class ValidationFormHelper {
       }
 
       if (formControl?.errors?.minlength) {
-        const minLength = controlName === 'title' ? 6 : 10;
+        const minLength = ['password', 'title'].includes(controlName) ? 6 : 10;
         return `${firstCapitalizeString(controlName)} should be of minimum ${minLength} characters length`;
       }
+
+      if (formControl?.errors?.email) return `Invalid email`;
     }
 
     if (isSubmit && formControl?.untouched && !formControl.valid)
