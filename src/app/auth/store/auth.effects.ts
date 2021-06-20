@@ -1,7 +1,13 @@
+// Angular
+// -----------------------------------------------------------------------------------------------------
+import {Injectable} from "@angular/core";
+
 // Ngrx
 // -----------------------------------------------------------------------------------------------------
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {loginStart, loginSuccess} from "./auth.action";
+import {Store} from "@ngrx/store";
+import {AppState} from "../../store/app.state";
 
 // Services
 // -----------------------------------------------------------------------------------------------------
@@ -10,13 +16,13 @@ import {AuthService} from "../auth.service";
 // Rxjs
 // -----------------------------------------------------------------------------------------------------
 import {exhaustMap, map} from "rxjs/operators";
-import {Injectable} from "@angular/core";
+import {setLoadingSpinner} from "../../shared/store/shared.actions";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthEffects {
-  constructor(private actions$: Actions, private authService: AuthService) {}
+  constructor(private actions$: Actions, private authService: AuthService, private store: Store<AppState>) {}
 
   login$ = createEffect(() => {
     return this.actions$.pipe(
@@ -26,6 +32,7 @@ export class AuthEffects {
           .pipe(
             map(data => {
               const user = this.authService.formatUser(data);
+              this.store.dispatch(setLoadingSpinner({status: false}));
               return loginSuccess({user});
             })
           )

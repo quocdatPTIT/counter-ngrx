@@ -12,6 +12,7 @@ import {ValidationFormHelper} from "../../shared/helpers/validation-form.helper"
 import {Store} from "@ngrx/store";
 import {AppState} from "../../store/app.state";
 import {loginStart} from "../store/auth.action";
+import {setLoadingSpinner} from "../../shared/store/shared.actions";
 
 @Component({
   selector: 'app-login',
@@ -49,6 +50,7 @@ export class LoginComponent implements OnInit {
   onLoginSubmit() {
     const email = this.loginForm.value.email;
     const password = this.loginForm.value.password;
+    this.store.dispatch(setLoadingSpinner({status: true}));
     this.store.dispatch(loginStart({email, password}));
   }
 }
