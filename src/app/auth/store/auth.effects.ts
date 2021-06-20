@@ -23,7 +23,12 @@ export class AuthEffects {
       ofType(loginStart),
       exhaustMap((action) =>
         this.authService.login(action.email, action.password)
-          .pipe(map(data => loginSuccess()))
+          .pipe(
+            map(data => {
+              const user = this.authService.formatUser(data);
+              return loginSuccess({user});
+            })
+          )
       )
     );
   })

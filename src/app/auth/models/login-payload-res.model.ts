@@ -1,4 +1,4 @@
-export class ResLoginPayload {
+export class LoginPayloadRes {
   idToken: string;
   email: string;
   refreshToken: string;
