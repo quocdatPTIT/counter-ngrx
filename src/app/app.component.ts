@@ -4,7 +4,7 @@ import {Observable} from "rxjs";
 
 import {Store} from "@ngrx/store";
 import {AppState} from "./store/app.state";
-import {getLoading} from "./shared/store/shared.selectors";
+import {getErrorMessage, getLoading} from "./shared/store/shared.selectors";
 
 @Component({
   selector: 'app-root',
@@ -15,10 +15,12 @@ import {getLoading} from "./shared/store/shared.selectors";
 export class AppComponent implements OnInit {
   title = 'learn-rxjs';
   showLoading$: Observable<boolean>;
+  errorMessage$: Observable<string>;
 
   constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
     this.showLoading$ = this.store.select(getLoading);
+    this.errorMessage$ = this.store.select(getErrorMessage);
   }
 }

@@ -1,6 +1,7 @@
 // Angular
 // -----------------------------------------------------------------------------------------------------
 import {Injectable} from "@angular/core";
+import {Router} from "@angular/router";
 
 // Ngrx
 // -----------------------------------------------------------------------------------------------------
@@ -15,14 +16,20 @@ import {AuthService} from "../auth.service";
 
 // Rxjs
 // -----------------------------------------------------------------------------------------------------
-import {exhaustMap, map} from "rxjs/operators";
-import {setLoadingSpinner} from "../../shared/store/shared.actions";
+import {catchError, exhaustMap, map, tap} from "rxjs/operators";
+import {setErrorMessage, setLoadingSpinner} from "../../shared/store/shared.actions";
+import {of} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthEffects {
-  constructor(private actions$: Actions, private authService: AuthService, private store: Store<AppState>) {}
+  constructor(
+    private actions$: Actions,
+    private authService: AuthService,
+    private store: Store<AppState>,
+    private router: Router,
+  ) {}
 
   login$ = createEffect(() => {
     return this.actions$.pipe(
@@ -33,10 +40,23 @@ export class AuthEffects {
             map(data => {
               const user = this.authService.formatUser(data);
               this.store.dispatch(setLoadingSpinner({status: false}));
+              this.store.dispatch(setErrorMessage({message: ''}));
               return loginSuccess({user});
+            }),
+            catchError(error => {
+              const errMessage = this.authService.getErrorMessage(error.error.error.message);
+              this.store.dispatch(setLoadingSpinner({status: false}));
+              return of(setErrorMessage({message: errMessage}));
             })
           )
       )
     );
-  })
+  });
+
+  loginRedirect$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(loginSuccess),
+      tap((action) => this.router.navigate(['/']))
+    )
+  }, {dispatch: false});
 }
