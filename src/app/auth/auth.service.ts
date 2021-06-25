@@ -18,6 +18,7 @@ import {Observable} from "rxjs";
   providedIn: 'root'
 })
 export class AuthService {
+  timeoutInterval: any;
   constructor(private http: HttpClient) {}
 
   login(email: string, password: string): Observable<AuthPayloadRes> {
@@ -48,5 +49,39 @@ export class AuthService {
       default:
         return 'Unknown error occurred. Please try again';
     }
+  }
+
+  setUserInLocalStorage(user: User) {
+    localStorage.setItem('userData', JSON.stringify(user));
+
+    this.runTimeoutInterval(user);
+  }
+
+  getUserInLocalStorage() {
+    const userString = localStorage.getItem('userData');
+    if (userString) {
+      const userData = JSON.parse(userString);
+      const expirationDate = new Date(userData.expirationDate);
+      const user = new User(
+        userData.email,
+        userData.token,
+        userData.localId,
+        expirationDate
+      );
+      this.runTimeoutInterval(user);
+      return user;
+    }
+
+    return null;
+  }
+
+  private runTimeoutInterval(user: User) {
+    const todaysDate = new Date().getTime();
+    const expirationDate = user.expireDate.getTime();
+    const timeInterval = expirationDate - todaysDate;
+
+    this.timeoutInterval = setTimeout(() => {
+
+    }, timeInterval);
   }
 }

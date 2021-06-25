@@ -6,7 +6,7 @@ import {Router} from "@angular/router";
 // Ngrx
 // -----------------------------------------------------------------------------------------------------
 import {Actions, createEffect, ofType} from "@ngrx/effects";
-import {loginStart, loginSuccess, signupStart, signupSuccess} from "./auth.action";
+import {autoLogin, loginStart, loginSuccess, signupStart, signupSuccess} from "./auth.action";
 import {setErrorMessage, setLoadingSpinner} from "../../shared/store/shared.actions";
 import {Store} from "@ngrx/store";
 import {AppState} from "../../store/app.state";
@@ -39,6 +39,7 @@ export class AuthEffects {
           .pipe(
             map(data => {
               const user = this.authService.formatUser(data);
+              this.authService.setUserInLocalStorage(user);
               return loginSuccess({user});
             }),
             catchError(error => {
@@ -80,4 +81,14 @@ export class AuthEffects {
       })
     )
   }, {dispatch: false});
+
+  autoLogin$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(autoLogin),
+      tap((action) => {
+        const user = this.authService.getUserInLocalStorage();
+        console.log(user);
+      })
+    )
+  }, {dispatch: false})
 }

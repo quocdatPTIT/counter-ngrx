@@ -24,6 +24,7 @@ import {StoreModule} from "@ngrx/store";
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {EffectsModule} from "@ngrx/effects";
 import {appReducer} from "./store/app.state";
+import {AuthEffects} from "./auth/store/auth.effects";
 
 @NgModule({
   declarations: [
@@ -36,7 +37,7 @@ import {appReducer} from "./store/app.state";
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    EffectsModule.forRoot([]),
+    EffectsModule.forRoot([AuthEffects]),
     StoreModule.forRoot(appReducer),
     StoreDevtoolsModule.instrument({
       autoPause: false
