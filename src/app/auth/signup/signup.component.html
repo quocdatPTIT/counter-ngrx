@@ -1,0 +1,30 @@
+<div class="row mt-3">
+  <div class="col-md-6 offset-md-3">
+    <h3>Sign up</h3>
+    <hr />
+    <form [formGroup]="signUpForm" (ngSubmit)="onSignUpSubmit()">
+      <div class="mb-3">
+        <label>Email</label>
+        <input type="text" class="form-control" formControlName="email" />
+      </div>
+      <div class="mb-3">
+        <label>Password</label>
+        <input
+          type="password"
+          class="form-control"
+          formControlName="password"
+        />
+      </div>
+
+      <div class="mb-3">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="!signUpForm.valid"
+        >
+          Sign up
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

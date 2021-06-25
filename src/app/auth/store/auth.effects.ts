@@ -6,7 +6,8 @@ import {Router} from "@angular/router";
 // Ngrx
 // -----------------------------------------------------------------------------------------------------
 import {Actions, createEffect, ofType} from "@ngrx/effects";
-import {loginStart, loginSuccess} from "./auth.action";
+import {loginStart, loginSuccess, signupStart, signupSuccess} from "./auth.action";
+import {setErrorMessage, setLoadingSpinner} from "../../shared/store/shared.actions";
 import {Store} from "@ngrx/store";
 import {AppState} from "../../store/app.state";
 
@@ -16,8 +17,7 @@ import {AuthService} from "../auth.service";
 
 // Rxjs
 // -----------------------------------------------------------------------------------------------------
-import {catchError, exhaustMap, map, tap} from "rxjs/operators";
-import {setErrorMessage, setLoadingSpinner} from "../../shared/store/shared.actions";
+import {catchError, exhaustMap, finalize, map, tap} from "rxjs/operators";
 import {of} from "rxjs";
 
 @Injectable({
@@ -39,24 +39,45 @@ export class AuthEffects {
           .pipe(
             map(data => {
               const user = this.authService.formatUser(data);
-              this.store.dispatch(setLoadingSpinner({status: false}));
-              this.store.dispatch(setErrorMessage({message: ''}));
               return loginSuccess({user});
             }),
             catchError(error => {
               const errMessage = this.authService.getErrorMessage(error.error.error.message);
-              this.store.dispatch(setLoadingSpinner({status: false}));
               return of(setErrorMessage({message: errMessage}));
-            })
+            }),
+            finalize(() => this.store.dispatch(setLoadingSpinner({status: false})))
           )
       )
     );
   });
 
-  loginRedirect$ = createEffect(() => {
+  signUp$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loginSuccess),
-      tap((action) => this.router.navigate(['/']))
+      ofType(signupStart),
+      exhaustMap((action) =>
+        this.authService.signUp(action.email, action.password)
+          .pipe(
+            map(data => {
+              const user = this.authService.formatUser(data);
+              return signupSuccess({user});
+            }),
+            catchError(error => {
+              const errMessage = this.authService.getErrorMessage(error.error.error.errors[0].message);
+              return of(setErrorMessage({message: errMessage}));
+            }),
+            finalize(() => this.store.dispatch(setLoadingSpinner({status: false})))
+          )
+      )
+    )
+  });
+
+  redirect$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(...[loginSuccess, signupSuccess]),
+      tap((action) => {
+        this.store.dispatch(setErrorMessage({message: ''}));
+        this.router.navigate(['/']);
+      })
     )
   }, {dispatch: false});
 }

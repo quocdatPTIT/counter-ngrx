@@ -3,7 +3,7 @@
 <div class="container">
   <div class="row">
     <div class="col-md-12">
-      <div class="alert alert-danger" *ngIf="errorMessage$ | async">Error Occurred</div>
+      <div class="alert alert-danger" *ngIf="errorMessage$ | async">{{errorMessage$ | async}}</div>
       <router-outlet></router-outlet>
     </div>
   </div>
