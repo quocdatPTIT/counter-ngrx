@@ -6,7 +6,7 @@ import {Router} from "@angular/router";
 // Ngrx
 // -----------------------------------------------------------------------------------------------------
 import {Actions, createEffect, ofType} from "@ngrx/effects";
-import {autoLogin, loginStart, loginSuccess, signupStart, signupSuccess} from "./auth.action";
+import {autoLogin, autoLogout, loginStart, loginSuccess, signupStart, signupSuccess} from "./auth.action";
 import {setErrorMessage, setLoadingSpinner} from "../../shared/store/shared.actions";
 import {Store} from "@ngrx/store";
 import {AppState} from "../../store/app.state";
@@ -17,7 +17,7 @@ import {AuthService} from "../auth.service";
 
 // Rxjs
 // -----------------------------------------------------------------------------------------------------
-import {catchError, exhaustMap, finalize, map, tap} from "rxjs/operators";
+import {catchError, exhaustMap, finalize, map, switchMap, tap} from "rxjs/operators";
 import {of} from "rxjs";
 
 @Injectable({
@@ -85,10 +85,20 @@ export class AuthEffects {
   autoLogin$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(autoLogin),
-      tap((action) => {
+      switchMap((action) => {
         const user = this.authService.getUserInLocalStorage();
-        console.log(user);
+        return of( loginSuccess({user}) );
       })
-    )
+    );
+  });
+
+  logout$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(autoLogout),
+      map((action) => {
+        this.authService.logout();
+        this.router.navigate(['/auth']);
+      })
+    );
   }, {dispatch: false})
 }

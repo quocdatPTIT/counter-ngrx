@@ -14,12 +14,18 @@ import {User} from "../shared/models/user.model";
 // -----------------------------------------------------------------------------------------------------
 import {Observable} from "rxjs";
 
+// Ngrx
+// -----------------------------------------------------------------------------------------------------
+import {Store} from "@ngrx/store";
+import {AppState} from "../store/app.state";
+import {autoLogout} from "./store/auth.action";
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   timeoutInterval: any;
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private store: Store<AppState>) {}
 
   login(email: string, password: string): Observable<AuthPayloadRes> {
     const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.FIREBASE_API_KEY}`;
@@ -81,7 +87,15 @@ export class AuthService {
     const timeInterval = expirationDate - todaysDate;
 
     this.timeoutInterval = setTimeout(() => {
-
+      this.store.dispatch(autoLogout());
     }, timeInterval);
+  }
+
+  logout() {
+    localStorage.removeItem('userData');
+    if (this.timeoutInterval) {
+      clearTimeout(this.timeoutInterval);
+      this.timeoutInterval = null;
+    }
   }
 }
