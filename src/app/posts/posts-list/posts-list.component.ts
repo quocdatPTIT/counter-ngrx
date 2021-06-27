@@ -15,7 +15,8 @@ import {Post} from "../models/post.model";
 import {Store} from "@ngrx/store";
 import {AppState} from "../../store/app.state";
 import {getPosts} from "../store/post.selector";
-import {deletePost} from "../store/post.actions";
+import {deletePost, loadPost} from "../store/post.actions";
+import {setLoadingSpinner} from "../../shared/store/shared.actions";
 
 @Component({
   selector: 'app-posts-list',
@@ -34,6 +35,8 @@ export class PostsListComponent implements OnInit {
   // -----------------------------------------------------------------------------------------------------
   ngOnInit(): void {
     this.posts$ = this.store.select(getPosts);
+    this.store.dispatch(setLoadingSpinner({status: true}));
+    this.store.dispatch(loadPost());
   }
 
   // Events

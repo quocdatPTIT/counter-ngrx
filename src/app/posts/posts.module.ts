@@ -20,6 +20,9 @@ import {postReducer} from "./store/post.reducer";
 // Helpers
 // -----------------------------------------------------------------------------------------------------
 import {ValidationFormHelper} from "../shared/helpers/validation-form.helper";
+import {EffectsModule} from "@ngrx/effects";
+import {PostsEffects} from "./store/posts.effects";
+import {PostsService} from "./posts.service";
 
 const routes: Routes = [
   {
@@ -48,6 +51,7 @@ const routes: Routes = [
     CommonModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
+    EffectsModule.forFeature([PostsEffects]),
     StoreModule.forFeature(POSTS_STATE_NAME, postReducer),
   ],
   providers: [
