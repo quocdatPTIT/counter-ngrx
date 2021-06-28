@@ -6,19 +6,23 @@ import {RouterModule, Routes} from '@angular/router';
 // Components
 // -----------------------------------------------------------------------------------------------------
 import {HomeComponent} from "./home/home.component";
+import {AuthGuard} from "./shared/guards/auth.guard";
 
 const routes: Routes = [
   {
     path: 'home',
-    component: HomeComponent
+    component: HomeComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'counter',
     loadChildren: () => import('./counter/counter.module').then(m => m.CounterModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'posts',
     loadChildren: () => import('./posts/posts.module').then(m => m.PostsModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'auth',

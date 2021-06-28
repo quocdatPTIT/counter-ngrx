@@ -1,5 +1,6 @@
 // Angular
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
+import {Injectable} from "@angular/core";
 
 // Rxjs
 import {Observable} from "rxjs";
@@ -9,7 +10,6 @@ import {exhaustMap} from "rxjs/operators";
 import {Store} from "@ngrx/store";
 import {AppState} from "../../store/app.state";
 import {getToken} from "../../auth/store/auth.selectors";
-import {Injectable} from "@angular/core";
 
 @Injectable({
   providedIn: 'root'
