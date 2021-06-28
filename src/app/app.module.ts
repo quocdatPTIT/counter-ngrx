@@ -3,7 +3,7 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AppRoutingModule} from './app-routing.module';
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 
 // App Component
 // -----------------------------------------------------------------------------------------------------
@@ -25,6 +25,7 @@ import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {EffectsModule} from "@ngrx/effects";
 import {appReducer} from "./store/app.state";
 import {AuthEffects} from "./auth/store/auth.effects";
+import {AuthTokenInterceptor} from "./shared/intercepors/auth-token.interceptor";
 
 @NgModule({
   declarations: [
@@ -43,7 +44,11 @@ import {AuthEffects} from "./auth/store/auth.effects";
       autoPause: false
     })
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthTokenInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -17,7 +17,7 @@ import {AuthService} from "../auth.service";
 
 // Rxjs
 // -----------------------------------------------------------------------------------------------------
-import {catchError, exhaustMap, finalize, map, switchMap, tap} from "rxjs/operators";
+import {catchError, exhaustMap, map, switchMap, tap} from "rxjs/operators";
 import {of} from "rxjs";
 
 @Injectable({
@@ -39,14 +39,15 @@ export class AuthEffects {
           .pipe(
             map(data => {
               const user = this.authService.formatUser(data);
+              this.store.dispatch(setLoadingSpinner({status: false}))
               this.authService.setUserInLocalStorage(user);
               return loginSuccess({user});
             }),
             catchError(error => {
               const errMessage = this.authService.getErrorMessage(error.error.error.message);
+              this.store.dispatch(setLoadingSpinner({status: false}))
               return of(setErrorMessage({message: errMessage}));
             }),
-            finalize(() => this.store.dispatch(setLoadingSpinner({status: false})))
           )
       )
     );
@@ -59,14 +60,15 @@ export class AuthEffects {
         this.authService.signUp(action.email, action.password)
           .pipe(
             map(data => {
+              this.store.dispatch(setLoadingSpinner({status: false}))
               const user = this.authService.formatUser(data);
               return signupSuccess({user});
             }),
             catchError(error => {
+              this.store.dispatch(setLoadingSpinner({status: false}))
               const errMessage = this.authService.getErrorMessage(error.error.error.errors[0].message);
               return of(setErrorMessage({message: errMessage}));
             }),
-            finalize(() => this.store.dispatch(setLoadingSpinner({status: false})))
           )
       )
     )

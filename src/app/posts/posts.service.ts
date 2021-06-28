@@ -23,4 +23,22 @@ export class PostsService {
         }),
       );
   }
+
+  addPost(post: Post): Observable<{ name: string }> {
+    return this.http.post<{ name: string }>(
+      `https://ngrx-6c38d-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json`,
+      post
+    );
+  }
+
+  updatePost(post: Post) {
+    const postData = {
+      [post.id as string]: { title: post.title, description: post.description },
+    };
+
+    return this.http.patch<Post>(
+      `https://ngrx-6c38d-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json`,
+      postData
+    );
+  }
 }
