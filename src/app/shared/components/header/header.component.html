@@ -8,7 +8,7 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         <a class="nav-link active" aria-current="page" href="#" [routerLink]="['/home']">Home</a>
-        <a class="nav-link" href="#" [routerLink]="['/counter']">Counter</a>
+        <button class="nav-link" href="#" (click)="goToCounter()">Counter</button>
         <a class="nav-link" href="#" [routerLink]="['/posts']">Posts</a>
         <a class="nav-link" href="#" [routerLink]="['/auth']" *ngIf="(isAuthenticated$ | async) === false">Login</a>
         <a class="nav-link" href="#" [routerLink]="['/auth/signup']" *ngIf="(isAuthenticated$ | async) === false">Sign Up</a>

@@ -26,6 +26,8 @@ import {EffectsModule} from "@ngrx/effects";
 import {appReducer} from "./store/app.state";
 import {AuthEffects} from "./auth/store/auth.effects";
 import {AuthTokenInterceptor} from "./shared/intercepors/auth-token.interceptor";
+import {StoreRouterConnectingModule} from "@ngrx/router-store";
+import {CustomSerializer} from "./store/router-store/custom-route-serializer";
 
 @NgModule({
   declarations: [
@@ -42,6 +44,9 @@ import {AuthTokenInterceptor} from "./shared/intercepors/auth-token.interceptor"
     StoreModule.forRoot(appReducer),
     StoreDevtoolsModule.instrument({
       autoPause: false
+    }),
+    StoreRouterConnectingModule.forRoot({
+      serializer: CustomSerializer
     })
   ],
   providers: [{

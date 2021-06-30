@@ -1,7 +1,7 @@
 // Angular
 // -----------------------------------------------------------------------------------------------------
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
+import {Router} from "@angular/router";
 
 // Ngrx
 // -----------------------------------------------------------------------------------------------------
@@ -40,7 +40,6 @@ export class EditPostComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
   constructor(
     private router: Router,
-    private route: ActivatedRoute,
     private cdf: ChangeDetectorRef,
     private validationFormHelper: ValidationFormHelper,
     private store: Store<AppState>
@@ -49,14 +48,25 @@ export class EditPostComponent implements OnInit, OnDestroy {
   // Lifecycle Hooks
   // -----------------------------------------------------------------------------------------------------
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      const id: string = params?.id;
-      this.store.select(getPostById({id}))
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((data) => {
-          if (data) { this.post = data; this.createForm(); this.cdf.detectChanges(); };
-        })
-    })
+    this.createForm();
+    this.store.select(getPostById).pipe(takeUntil(this.unsubscribe$)).subscribe((post) => {
+      if (post) {
+        this.post = post as Post;
+        this.postForm.patchValue({
+          title: post?.title,
+          description: post?.description
+        });
+        this.cdf.detectChanges();
+      }
+    });
+    // this.route.params.subscribe(params => {
+    //   const id: string = params?.id;
+    //   this.store.select(getPostById({id}))
+    //     .pipe(takeUntil(this.unsubscribe$))
+    //     .subscribe((data) => {
+    //       if (data) { this.post = data; this.createForm(); this.cdf.detectChanges(); };
+    //     })
+    // })
   }
 
   ngOnDestroy(): void {
@@ -92,8 +102,8 @@ export class EditPostComponent implements OnInit, OnDestroy {
 
   private createForm(): void {
     this.postForm = new FormGroup({
-      title: new FormControl(this.post.title, [Validators.required, Validators.minLength(6)]),
-      description: new FormControl(this.post.description, [Validators.required, Validators.minLength(10)])
+      title: new FormControl(null, [Validators.required, Validators.minLength(6)]),
+      description: new FormControl(null, [Validators.required, Validators.minLength(10)])
     });
   }
 }
