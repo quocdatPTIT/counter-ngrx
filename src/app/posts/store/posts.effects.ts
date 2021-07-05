@@ -17,6 +17,7 @@ import {filter, map, mergeMap, switchMap} from "rxjs/operators";
 // Models
 import {Post} from "../models/post.model";
 import {ROUTER_NAVIGATION, RouterNavigatedAction, SerializedRouterStateSnapshot} from "@ngrx/router-store";
+import {Update} from "@ngrx/entity";
 
 @Injectable({
   providedIn: 'root'
@@ -61,7 +62,13 @@ export class PostsEffects {
         return this.postsService.updatePost(action.post)
           .pipe(
             map((data) => {
-              return updatePostSuccess({post: action.post});
+              const updatedPost: Update<Post> = {
+                id: action.post.id as string,
+                changes: {
+                  ...action.post
+                }
+              };
+              return updatePostSuccess({post: updatedPost});
             })
           )
       })
