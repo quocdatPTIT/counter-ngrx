@@ -41,4 +41,10 @@ export class PostsService {
       postData
     );
   }
+
+  getPostById(id: string): Observable<Post> {
+    return this.http.get<Post>(
+      `https://ngrx-6c38d-default-rtdb.asia-southeast1.firebasedatabase.app/posts/${id}.json`
+    );
+  }
 }

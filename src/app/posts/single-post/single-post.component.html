@@ -1,0 +1,9 @@
+<div class="mt-3">Post detail</div>
+<div *ngIf="post$ | async as postData" class="mt-3">
+  <span>Id: </span><div>{{postData.id}}</div>
+  <span>Title: </span><div>{{postData.title}}</div>
+  <span>Description: </span><div>{{postData.description}}</div>
+</div>
+<div>
+  <a [routerLink]="['/posts']">Back to posts</a>
+</div>

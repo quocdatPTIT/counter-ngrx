@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-md-8">
+  <div class="col-md-9">
     <h3 class="mt-3">Post List</h3>
     <div>
       <a href="" class="btn btn-primary" [routerLink]="['/posts/add']">Add Post</a>
@@ -20,13 +20,14 @@
         <td>{{post.description}}</td>
         <td>
           <button type="button" class="btn btn-outline-primary" [routerLink]="['edit', post.id]">Update</button>&nbsp;
-          <button type="button" class="btn btn-outline-danger" (click)="onDeletePost(post.id)">Delete</button>
+          <button type="button" class="btn btn-outline-danger" (click)="onDeletePost(post.id)">Delete</button>&nbsp;
+          <button type="button" class="btn btn-outline-info" [routerLink]="['/posts/detail', post.id]">Detail</button>
         </td>
       </tr>
       </tbody>
     </table>
   </div>
-  <div class="col-md-4">
+  <div class="col-md-3">
     <router-outlet></router-outlet>
   </div>
 </div>

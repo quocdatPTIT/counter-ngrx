@@ -12,10 +12,11 @@ import {addPost, addPostSuccess, loadPost, loadPostSuccess, updatePost, updatePo
 import {PostsService} from "../posts.service";
 
 // Rxjs
-import {map, mergeMap, switchMap} from "rxjs/operators";
+import {filter, map, mergeMap, switchMap} from "rxjs/operators";
 
 // Models
 import {Post} from "../models/post.model";
+import {ROUTER_NAVIGATION, RouterNavigatedAction, SerializedRouterStateSnapshot} from "@ngrx/router-store";
 
 @Injectable({
   providedIn: 'root'
@@ -66,4 +67,26 @@ export class PostsEffects {
       })
     );
   });
+
+  getSinglePost$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(ROUTER_NAVIGATION),
+      filter((r: RouterNavigatedAction) => {
+        console.log(r.payload.routerState);
+        return r.payload.routerState.url.startsWith('/posts/detail');
+      }),
+      map((r: RouterNavigatedAction) => {
+        // @ts-ignore
+        return r.payload.routerState['params']['id'];
+      }),
+      switchMap((id) => {
+        return this.postsService.getPostById(id).pipe(
+          map((post) => {
+            const postData = [{...post, id}];
+            return loadPostSuccess({posts: postData});
+          })
+        )
+      })
+    );
+  })
 }

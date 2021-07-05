@@ -22,7 +22,7 @@ import {postReducer} from "./store/post.reducer";
 import {ValidationFormHelper} from "../shared/helpers/validation-form.helper";
 import {EffectsModule} from "@ngrx/effects";
 import {PostsEffects} from "./store/posts.effects";
-import {PostsService} from "./posts.service";
+import { SinglePostComponent } from './single-post/single-post.component';
 
 const routes: Routes = [
   {
@@ -45,7 +45,8 @@ const routes: Routes = [
   declarations: [
     PostsListComponent,
     AddPostComponent,
-    EditPostComponent
+    EditPostComponent,
+    SinglePostComponent
   ],
   imports: [
     CommonModule,
